@@ -1,0 +1,14 @@
+.card-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    font-size: 0.8rem;
+  }
+
+  .card {
+    max-width: 600px;
+    margin: auto;
+  }
