@@ -3,37 +3,37 @@ import { Link, useParams, useHistory } from "react-router-dom";
 import { readDeck, deleteCard } from "../utils/api";
 
 function DeckScreen() {
-  const { deckId } = useParams();
-  const history = useHistory();
-  const [deck, setDeck] = useState({});
+  const { deckId } = useParams(); // Get deckId from URL params
+  const history = useHistory(); // Get history object from React Router
+  const [deck, setDeck] = useState({}); // Initialize deck state
 
   useEffect(() => {
     async function fetchData() {
-      const fetchedDeck = await readDeck(deckId);
-      setDeck(fetchedDeck);
+      const fetchedDeck = await readDeck(deckId); // Fetch deck data using deckId
+      setDeck(fetchedDeck); // Set deck state with fetched data
     }
     fetchData();
   }, [deckId]);
 
   function handleDelete() {
     if (window.confirm("Are you sure you want to delete this deck?")) {
-      // Delete the deck
-      history.push("/");
+      // Prompt user to confirm deletion
+      history.push("/"); // Go back to home page after deleting
     }
   }
 
   function handleDeleteCard(cardId) {
     if (window.confirm("Are you sure you want to delete this card?")) {
-      // Delete the card
+      // Prompt user to confirm deletion
       const updatedDeck = {
         ...deck,
         cards: deck.cards.filter((card) => card.id !== cardId),
       };
-      setDeck(updatedDeck);
-      deleteCard(cardId);
+      setDeck(updatedDeck); // Update deck state to remove deleted card
+      deleteCard(cardId); // Delete card from API
     }
   }
-
+ // Rendering
   return (
     <div>
       {/* Breadcrumb navigation */}

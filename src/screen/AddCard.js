@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { createCard, readDeck } from "../utils/api";
+import CardForm from "../CardForm";
 
 function AddCard() {
   const { deckId } = useParams();
@@ -14,6 +15,7 @@ function AddCard() {
 
   useEffect(() => {
     async function loadDeck() {
+      // Load the deck that the card is being added to
       const deck = await readDeck(deckId);
       setDeck(deck);
     }
@@ -21,6 +23,7 @@ function AddCard() {
   }, [deckId]);
 
   function handleChange({ target }) {
+    // Update the form data when the user types in the "front" or "back" fields
     setFormData({
       ...formData,
       [target.name]: target.value,
@@ -33,17 +36,20 @@ function AddCard() {
       front: formData.front,
       back: formData.back,
     };
+    // Create the new card and reset the form data
     createCard(deckId, card).then(() => {
       setFormData({
         front: "",
         back: "",
       });
+      // Reload the page to show the new card in the list
       history.go(0);
     });
   }
 
   return (
     <div>
+      {/* Breadcrumb navigation */}
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
@@ -57,50 +63,16 @@ function AddCard() {
           </li>
         </ol>
       </nav>
+      {/* Display the deck name and a form for creating a new card */}
       <h2>{deck.name}: Add Card</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="front">Front</label>
-          <textarea
-            id="front"
-            name="front"
-            className="form-control"
-            rows="4"
-            onChange={handleChange}
-            value={formData.front}
-            placeholder="Front side of card"
-            required
-          ></textarea>
-        </div>
-        <div className="form-group">
-          <label htmlFor="back">Back</label>
-          <textarea
-            id="back"
-            name="back"
-            className="form-control"
-            rows="4"
-            onChange={handleChange}
-            value={formData.back}
-            placeholder="Back side of card"
-            required
-          ></textarea>
-        </div>
-        <Link
-          to={`/decks/${deckId}`}
-          className="btn btn-secondary mr-2"
-        >
-          Cancel
-        </Link>
-        <button type="submit" className="btn btn-primary">
-          Save
-        </button>
-        <Link
-          to={`/decks/${deckId}`}
-          className="btn btn-primary ml-2"
-        >
-          Done
-        </Link>
-      </form>
+      {/* Using the shared component*/}
+      <CardForm 
+        formData={formData}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        deckId={deckId}
+        mode="add"
+      />
     </div>
   );
 }

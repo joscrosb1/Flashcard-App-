@@ -10,6 +10,7 @@ function StudyScreen() {
   const [currentCard, setCurrentCard] = useState(0);
   const [showFront, setShowFront] = useState(true);
 
+  // Fetch the deck data from the API
   useEffect(() => {
     async function fetchData() {
       const fetchedDeck = await readDeck(deckId);
@@ -18,15 +19,18 @@ function StudyScreen() {
     fetchData();
   }, [deckId]);
 
+  // Flip the card to show the back side
   const handleFlip = () => {
     setShowFront(!showFront);
   };
 
+  // Move to the next card or restart if on the last card
   const handleNext = () => {
     if (currentCard + 1 < deck.cards.length) {
       setCurrentCard(currentCard + 1);
       setShowFront(true);
     } else {
+      // Confirm with the user before restarting the cards
       if (window.confirm('Restart cards? Click "Cancel" to return to the home page.')) {
         setCurrentCard(0);
         setShowFront(true);
@@ -36,6 +40,7 @@ function StudyScreen() {
     }
   };
 
+  // Render a message if there are not enough cards to study
   const renderNotEnoughCards = () => {
     return (
       <div>
@@ -50,7 +55,9 @@ function StudyScreen() {
     );
   };
 
+  // Render the study screen
   if (!deck.cards) {
+    // If the deck data is not yet loaded, show a loading message
     return <p>Loading...</p>;
   }
 
@@ -73,8 +80,10 @@ function StudyScreen() {
       </nav>
       <h2>Study: {deck.name}</h2>
       {deck.cards.length < 3 ? (
+        // If there are not enough cards, render a message
         renderNotEnoughCards()
       ) : (
+        // Otherwise, render the card
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">
@@ -97,5 +106,6 @@ function StudyScreen() {
     </div>
   );
 }
+
 
 export default StudyScreen;
